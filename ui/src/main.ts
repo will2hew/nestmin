@@ -7,6 +7,8 @@ import App from "./App.vue";
 import "./styles.css";
 import Table from "./views/Table.vue";
 
+import Tooltip from "primevue/tooltip";
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/:name",
@@ -28,4 +30,5 @@ createApp(App)
       preset: Aura,
     },
   })
+  .directive("tooltip", Tooltip)
   .mount("#app");

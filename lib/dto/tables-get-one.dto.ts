@@ -9,6 +9,8 @@ interface Column {
   nullable: boolean;
   primary: boolean;
   relation: boolean;
+  generated: boolean;
 
+  comment?: string;
   referencedTable?: string;
 }

@@ -25,7 +25,12 @@
               {{ tableDetails.name }}
             </span>
             <div>
-              <Button icon="pi pi-plus" size="small" severity="secondary" />
+              <Button
+                icon="pi pi-plus"
+                size="small"
+                severity="secondary"
+                @click="showAddRowDialog = true"
+              />
             </div>
           </div>
         </template>
@@ -48,24 +53,46 @@
           </template>
 
           <template #header>
-            {{ column.name }}
-            <Badge v-if="column.primary" size="small">PK</Badge>
-            <Badge v-if="column.relation" size="small" severity="info">
-              FK
-            </Badge>
+            <div v-tooltip.top="column.comment">
+              {{ column.name }}
+              <Badge v-if="column.primary" size="small">PK</Badge>
+              <Badge v-if="column.relation" size="small" severity="info">
+                FK
+              </Badge>
+            </div>
           </template>
 
-          <template v-if="column.referencedTable" #body="slotProps">
-            <RouterLink :to="column.referencedTable">
-              <Badge class="cursor-pointer">
-                {{ slotProps.data[column.name] }}
+          <template #body="slotProps">
+            <template v-if="column.referencedTable">
+              <RouterLink :to="column.referencedTable">
+                <Badge class="cursor-pointer" severity="info">
+                  {{ slotProps.data[column.name] }}
+                </Badge>
+              </RouterLink>
+            </template>
+            <template v-else-if="column.nullable">
+              <Badge
+                v-if="slotProps.data[column.name] === null"
+                severity="secondary"
+              >
+                NULL
               </Badge>
-            </RouterLink>
+              <template v-else>
+                {{ slotProps.data[column.name] }}
+              </template>
+            </template>
+            <template v-else>
+              {{ slotProps.data[column.name] }}
+            </template>
           </template>
         </Column>
       </DataTable>
     </template>
   </Card>
+
+  <Dialog v-model:visible="showAddRowDialog" modal :draggable="false">
+    <AddRow v-if="tableDetails" :table-details="tableDetails" />
+  </Dialog>
 </template>
 <script setup lang="ts">
 import axios from "axios";
@@ -74,11 +101,16 @@ import Button from "primevue/button";
 import Card from "primevue/card";
 import Column from "primevue/column";
 import DataTable, { DataTableFilterMeta } from "primevue/datatable";
+import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import { PageState } from "primevue/paginator";
 import { onMounted, ref, toRaw, watch } from "vue";
+import { RouterLink } from "vue-router";
 import { FilterDto } from "../../../lib/dto/tables-get-data.dto";
 import { TablesGetOneDto } from "../../../lib/dto/tables-get-one.dto";
+import AddRow from "../components/AddRow.vue";
+
+const showAddRowDialog = ref(false);
 
 const tableDetails = ref<TablesGetOneDto | null>(null);
 const tableData = ref<any[]>([]);

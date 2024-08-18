@@ -33,8 +33,11 @@ export class NestminService {
           type: column.type.toString(),
           nullable: column.isNullable,
           primary: column.isPrimary,
-          relation: column.relationMetadata ? true : undefined,
 
+          generated: column.isGenerated,
+          comment: column.comment,
+
+          relation: column.relationMetadata ? true : undefined,
           referencedTable: column.relationMetadata
             ? column.relationMetadata.inverseEntityMetadata.name
             : undefined,
