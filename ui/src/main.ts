@@ -1,4 +1,5 @@
 import Aura from "@primevue/themes/aura";
+import "primeicons/primeicons.css";
 import PrimeVue from "primevue/config";
 import { createApp } from "vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";

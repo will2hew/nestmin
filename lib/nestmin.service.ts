@@ -54,7 +54,6 @@ export class NestminService {
 
     if (query.filters) {
       query.filters.forEach((filter) => {
-        console.log(filter);
         switch (filter.matchMode.toLowerCase()) {
           case "equals":
             qb.andWhere(`${filter.column} = :value`, {

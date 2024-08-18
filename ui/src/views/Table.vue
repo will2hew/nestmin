@@ -20,9 +20,14 @@
         @page="handlePageChange"
       >
         <template #header>
-          <span class="text-xl font-bold" v-if="tableDetails">
-            {{ tableDetails.name }}
-          </span>
+          <div class="flex justify-between">
+            <span class="text-xl font-bold" v-if="tableDetails">
+              {{ tableDetails.name }}
+            </span>
+            <div>
+              <Button icon="pi pi-plus" size="small" severity="secondary" />
+            </div>
+          </div>
         </template>
 
         <Column
@@ -63,6 +68,7 @@
 <script setup lang="ts">
 import axios from "axios";
 import Badge from "primevue/badge";
+import Button from "primevue/button";
 import Card from "primevue/card";
 import Column from "primevue/column";
 import DataTable, { DataTableFilterMeta } from "primevue/datatable";
