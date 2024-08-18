@@ -1,10 +1,25 @@
-import { Controller, Get, Inject, Param, Query } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from "@nestjs/common";
+import { TablesGetDataDto } from "./dto/tables-get-data.dto";
 import { TablesGetManyDto } from "./dto/tables-get-many.dto";
 import { NestminModuleOptions } from "./interfaces/nestmin-module-options.interface";
 import { NESTMIN_MODULE_OPTIONS } from "./nestmin.constants";
 import { NestminService } from "./nestmin.service";
 
 @Controller("admin")
+@UsePipes(
+  new ValidationPipe({
+    transform: true,
+    transformOptions: { enableImplicitConversion: true },
+  }),
+)
 export class NestminController {
   constructor(
     @Inject(NESTMIN_MODULE_OPTIONS)
@@ -25,12 +40,8 @@ export class NestminController {
   @Get("tables/:name/data")
   getTableData(
     @Param("name") entityName: string,
-    @Query("page") pageString: string,
-    @Query("pageSize") pageSizeString: string,
+    @Query() query: TablesGetDataDto,
   ) {
-    const page = parseInt(pageString);
-    const pageSize = parseInt(pageSizeString);
-
-    return this.nestminService.getTableData(entityName, page, pageSize);
+    return this.nestminService.getTableData(entityName, query);
   }
 }

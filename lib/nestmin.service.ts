@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { DataSource, EntityMetadata } from "typeorm";
+import { TablesGetDataDto } from "./dto/tables-get-data.dto";
 import { TablesGetManyDto } from "./dto/tables-get-many.dto";
 import { TablesGetOneDto } from "./dto/tables-get-one.dto";
 @Injectable()
@@ -42,15 +43,45 @@ export class NestminService {
     };
   }
 
-  getTableData(name: string, page: number, pageSize: number) {
-    const skip = (page - 1) * pageSize;
+  getTableData(name: string, query: TablesGetDataDto) {
+    const skip = (query.page - 1) * query.pageSize;
 
-    return this.dataSource
-      .getRepository(name)
-      .createQueryBuilder()
+    const qb = this.dataSource.getRepository(name).createQueryBuilder();
+
+    if (query.sortField) {
+      qb.orderBy(query.sortField, query.sortOrder === 1 ? "ASC" : "DESC");
+    }
+
+    if (query.filters) {
+      query.filters.forEach((filter) => {
+        console.log(filter);
+        switch (filter.matchMode.toLowerCase()) {
+          case "equals":
+            qb.andWhere(`${filter.column} = :value`, {
+              value: filter.value,
+            });
+            break;
+
+          case "contains":
+            qb.andWhere(`${filter.column} LIKE :value`, {
+              value: `%${filter.value}%`,
+            });
+            break;
+
+          case "startswith":
+            qb.andWhere(`${filter.column} LIKE :value`, {
+              column: filter.column,
+              value: `${filter.value}%`,
+            });
+            break;
+        }
+      });
+    }
+
+    return qb
       .loadAllRelationIds()
       .skip(skip)
-      .take(pageSize)
+      .take(query.pageSize)
       .getManyAndCount();
   }
 }
