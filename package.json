@@ -2,7 +2,7 @@
   "name": "@will2hew/nestmin",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && cd ui && npm run build && cd .. && cp -r ui/dist dist/ui",
     "build:watch": "tsc -w -p tsconfig.build.json",
