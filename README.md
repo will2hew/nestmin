@@ -2,7 +2,7 @@
 
 Nestmin is a UI built on top of TypeORM and NestJS to help you view and manage your database. It creates a generic interface for all of your tables to create, delete, edit and view data.
 
-![Nestmin](screenshots/nestmin.png)
+![Nestmin](https://github.com/will2hew/nestmin/blob/main/screenshots/nestmin.png)
 
 ## Quick Start
 
