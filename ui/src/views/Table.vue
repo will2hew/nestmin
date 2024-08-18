@@ -1,12 +1,11 @@
 <template>
-  <Card class="m-5">
+  <Card>
     <template #content>
       <DataTable
         v-if="tableDetails"
         v-model:sort-field="sortField"
         v-model:sort-order="sortOrder"
         v-model:filters="filters"
-        v-model:editing-rows="editingRows"
         filter-display="row"
         size="small"
         :value="tableData"
@@ -15,13 +14,17 @@
         :rows="pageSize"
         :rowsPerPageOptions="[10, 25, 50]"
         :total-records="tableTotalRows"
-        edit-mode="row"
         lazy
         removable-sort
         resizable-columns
         @page="handlePageChange"
-        @row-edit-save="saveRow"
       >
+        <template #header>
+          <span class="text-xl font-bold" v-if="tableDetails">
+            {{ tableDetails.name }}
+          </span>
+        </template>
+
         <Column
           v-if="filters"
           v-for="column in tableDetails.columns"
@@ -52,12 +55,7 @@
               </Badge>
             </RouterLink>
           </template>
-
-          <template #editor="{ data, field }">
-            <InputText v-model="data[field]" />
-          </template>
         </Column>
-        <Column :rowEditor="true" bodyStyle="text-align:center"></Column>
       </DataTable>
     </template>
   </Card>
@@ -77,8 +75,6 @@ import { TablesGetOneDto } from "../../../lib/dto/tables-get-one.dto";
 const tableDetails = ref<TablesGetOneDto | null>(null);
 const tableData = ref<any[]>([]);
 const tableTotalRows = ref(0);
-
-const editingRows = ref<any[]>([]);
 
 const filters = ref<DataTableFilterMeta | null>(null);
 
