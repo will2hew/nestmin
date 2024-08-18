@@ -6,6 +6,8 @@
         v-model:sort-field="sortField"
         v-model:sort-order="sortOrder"
         v-model:filters="filters"
+        v-model:editing-rows="editingRows"
+        edit-mode="row"
         filter-display="row"
         size="small"
         :value="tableData"
@@ -18,6 +20,7 @@
         removable-sort
         resizable-columns
         @page="handlePageChange"
+        @row-edit-save="handleRowSave"
       >
         <template #header>
           <div class="flex justify-between">
@@ -65,9 +68,10 @@
           <template #body="slotProps">
             <template v-if="column.referencedTable">
               <RouterLink :to="column.referencedTable">
-                <Badge class="cursor-pointer" severity="info">
+                <Chip class="text-sm">
                   {{ slotProps.data[column.name] }}
-                </Badge>
+                  <i class="pi pi-external-link" />
+                </Chip>
               </RouterLink>
             </template>
             <template v-else-if="column.nullable">
@@ -81,17 +85,43 @@
                 {{ slotProps.data[column.name] }}
               </template>
             </template>
+            <template v-else-if="column.type === 'datetime'">
+              <Badge severity="secondary">
+                {{ new Date(slotProps.data[column.name]).toLocaleString() }}
+              </Badge>
+            </template>
+            <template v-else-if="!column.selected">
+              <Badge
+                v-tooltip.top="'This column has been marked as select: false'"
+                severity="secondary"
+                >Hidden</Badge
+              >
+            </template>
             <template v-else>
               {{ slotProps.data[column.name] }}
             </template>
           </template>
+
+          <template #editor="{ data, field }">
+            <InputText v-if="column.type === 'text'" v-model="data[field]" />
+          </template>
         </Column>
+
+        <Column
+          :rowEditor="true"
+          style="width: 10%; min-width: 8rem"
+          bodyStyle="text-align:center"
+        />
       </DataTable>
     </template>
   </Card>
 
   <Dialog v-model:visible="showAddRowDialog" modal :draggable="false">
-    <AddRow v-if="tableDetails" :table-details="tableDetails" />
+    <AddRow
+      @add-row="handleAddRow"
+      v-if="tableDetails"
+      :table-details="tableDetails"
+    />
   </Dialog>
 </template>
 <script setup lang="ts">
@@ -99,8 +129,12 @@ import axios from "axios";
 import Badge from "primevue/badge";
 import Button from "primevue/button";
 import Card from "primevue/card";
+import Chip from "primevue/chip";
 import Column from "primevue/column";
-import DataTable, { DataTableFilterMeta } from "primevue/datatable";
+import DataTable, {
+  DataTableFilterMeta,
+  DataTableRowEditSaveEvent,
+} from "primevue/datatable";
 import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import { PageState } from "primevue/paginator";
@@ -111,6 +145,8 @@ import { TablesGetOneDto } from "../../../lib/dto/tables-get-one.dto";
 import AddRow from "../components/AddRow.vue";
 
 const showAddRowDialog = ref(false);
+
+const editingRows = ref<any[]>([]);
 
 const tableDetails = ref<TablesGetOneDto | null>(null);
 const tableData = ref<any[]>([]);
@@ -127,6 +163,25 @@ const sortOrder = ref(1);
 const props = defineProps({
   name: String,
 });
+
+async function handleRowSave(event: DataTableRowEditSaveEvent) {
+  try {
+    await axios.patch(`/api/admin/tables/${props.name}`, event.newData);
+    await loadData();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function handleAddRow(formData: any) {
+  try {
+    await axios.put(`/api/admin/tables/${props.name}`, formData);
+    await loadData();
+    showAddRowDialog.value = false;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 async function handlePageChange(event: PageState) {
   pageStart.value = event.first;

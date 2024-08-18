@@ -1,8 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
   Inject,
   Param,
+  Patch,
+  Put,
   Query,
   UseGuards,
   UsePipes,
@@ -38,6 +41,16 @@ export class NestminController {
   @Get("tables/:name")
   getTable(@Param("name") entityName: string) {
     return this.nestminService.getTable(entityName);
+  }
+
+  @Put("tables/:name")
+  addEntry(@Param("name") table: string, @Body() data: any) {
+    return this.nestminService.addEntry(table, data);
+  }
+
+  @Patch("tables/:name")
+  updateEntry(@Param("name") table: string, @Body() data: any) {
+    return this.nestminService.updateEntry(table, data);
   }
 
   @Get("tables/:name/data")

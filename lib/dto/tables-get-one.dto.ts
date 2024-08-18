@@ -10,6 +10,7 @@ interface Column {
   primary: boolean;
   relation: boolean;
   generated: boolean;
+  selected: boolean;
 
   comment?: string;
   referencedTable?: string;

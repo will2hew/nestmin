@@ -7,6 +7,14 @@ import { TablesGetOneDto } from "./dto/tables-get-one.dto";
 export class NestminService {
   constructor(private readonly dataSource: DataSource) {}
 
+  addEntry(table: string, newEntry: any) {
+    return this.dataSource.getRepository(table).save(newEntry);
+  }
+
+  updateEntry(table: string, updatedEntry: any) {
+    return this.dataSource.getRepository(table).save(updatedEntry);
+  }
+
   getTables(): TablesGetManyDto {
     const entities = this.dataSource.entityMetadatas;
 
@@ -34,7 +42,16 @@ export class NestminService {
           nullable: column.isNullable,
           primary: column.isPrimary,
 
-          generated: column.isGenerated,
+          generated:
+            column.isGenerated ||
+            column.isCreateDate ||
+            column.isDeleteDate ||
+            column.isUpdateDate ||
+            column.isVersion ||
+            column.generationStrategy !== undefined,
+
+          selected: column.isSelect,
+
           comment: column.comment,
 
           relation: column.relationMetadata ? true : undefined,
