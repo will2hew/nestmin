@@ -15,7 +15,10 @@ export class NestminModule {
       imports: [
         ServeStaticModule.forRoot({
           rootPath: join(__dirname, "ui"),
-          serveRoot: `${options.prefix}/ui`,
+          serveRoot: `/${options.prefix}/ui`,
+          serveStaticOptions: {
+            index: false,
+          },
         }),
       ],
       providers: [

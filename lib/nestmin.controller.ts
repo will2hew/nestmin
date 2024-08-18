@@ -11,6 +11,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from "@nestjs/common";
+import { PATH_METADATA } from "@nestjs/common/constants";
 import { TablesGetDataDto } from "./dto/tables-get-data.dto";
 import { TablesGetManyDto } from "./dto/tables-get-many.dto";
 import { NestminModuleOptions } from "./interfaces/nestmin-module-options.interface";
@@ -18,7 +19,7 @@ import { NESTMIN_MODULE_OPTIONS } from "./nestmin.constants";
 import { NestminService } from "./nestmin.service";
 import { ProxyGuard } from "./proxy.guard";
 
-@Controller("admin")
+@Controller()
 @UseGuards(ProxyGuard)
 @UsePipes(
   new ValidationPipe({
@@ -31,7 +32,13 @@ export class NestminController {
     @Inject(NESTMIN_MODULE_OPTIONS)
     private readonly options: NestminModuleOptions,
     private readonly nestminService: NestminService,
-  ) {}
+  ) {
+    Reflect.defineMetadata(
+      PATH_METADATA,
+      this.options.prefix,
+      NestminController,
+    );
+  }
 
   @Get("tables")
   getTables(): TablesGetManyDto {

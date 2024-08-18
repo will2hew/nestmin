@@ -3,6 +3,8 @@
     <template #content>
       <DataTable
         v-if="tableDetails"
+        v-model:first="pageStart"
+        v-model:rows="pageSize"
         v-model:sort-field="sortField"
         v-model:sort-order="sortOrder"
         v-model:filters="filters"
@@ -13,13 +15,11 @@
         :value="tableData"
         show-gridlines
         paginator
-        :rows="pageSize"
         :rowsPerPageOptions="[10, 25, 50]"
         :total-records="tableTotalRows"
         lazy
         removable-sort
         resizable-columns
-        @page="handlePageChange"
         @row-edit-save="handleRowSave"
       >
         <template #header>
@@ -137,7 +137,6 @@ import DataTable, {
 } from "primevue/datatable";
 import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
-import { PageState } from "primevue/paginator";
 import { onMounted, ref, toRaw, watch } from "vue";
 import { RouterLink } from "vue-router";
 import { FilterDto } from "../../../lib/dto/tables-get-data.dto";
@@ -181,12 +180,6 @@ async function handleAddRow(formData: any) {
   } catch (error) {
     console.error(error);
   }
-}
-
-async function handlePageChange(event: PageState) {
-  pageStart.value = event.first;
-  pageSize.value = event.rows;
-  await loadData();
 }
 
 async function loadData(): Promise<void> {
@@ -242,18 +235,11 @@ async function loadData(): Promise<void> {
   }
 }
 
-watch(filters, async () => await loadData());
-
 watch(
-  () => props.name,
-  async () => {
-    await loadData();
-  },
+  [() => props.name, sortField, sortOrder, filters, pageStart, pageSize],
+  loadData,
+  { immediate: true },
 );
-
-watch([sortField, sortOrder], async () => {
-  await loadData();
-});
 
 onMounted(async () => {
   await loadData();
