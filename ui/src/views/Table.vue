@@ -36,6 +36,8 @@
           :key="column.name"
           :field="column.name"
           :sortable="!column.relation"
+          align-frozen="left"
+          :frozen="column.primary"
         >
           <template #filter="{ filterModel }">
             <InputText

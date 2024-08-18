@@ -31,11 +31,11 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex p-2 gap-2">
-    <div class="card text-sm">
+  <div class="flex p-2 gap-2 w-full">
+    <div class="card text-sm shrink-0">
       <Menu :model="items" />
     </div>
-    <div class="flex-grow">
+    <div class="flex-grow overflow-x-auto">
       <RouterView />
     </div>
   </div>
