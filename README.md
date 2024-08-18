@@ -30,3 +30,5 @@ import { AuthGuard } from "./auth.guard";
 })
 export class AppModule {}
 ```
+
+3. Start your app and navigate to the prefix you specified
