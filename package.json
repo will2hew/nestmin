@@ -1,26 +1,17 @@
 {
   "name": "@will2hew/nestmin",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "version": "0.2.0",
+  "version": "1.0.0",
+  "description": "Nestmin is a UI built on top of TypeORM and NestJS to help you view and manage your database. It creates a generic interface for all of your tables to create, delete, edit and view data.",
+  "main": "dist/api/index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && cd ui && npm run build && cd .. && cp -r ui/dist dist/ui",
-    "build:watch": "tsc -w -p tsconfig.build.json",
-    "prepublishOnly": "npm run build"
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces && mkdir -p dist/{api,ui} && cp -r packages/api/dist/* dist/api && cp -r packages/ui/dist/* dist/ui",
+    "build:api": "npm run build --workspace @will2hew/nestmin-api",
+    "build:ui": "npm run build --workspace @will2hew/nestmin-ui"
   },
-  "dependencies": {
-    "@nestjs/common": "^10.4.1",
-    "@nestjs/core": "^10.4.1",
-    "@nestjs/serve-static": "^4.0.2",
-    "@nestjs/typeorm": "^10.0.2",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
-    "express": "^4.19.2",
-    "handlebars": "^4.7.8",
-    "typeorm": "^0.3.20"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.21",
-    "typescript": "^5.5.4"
-  }
+  "workspaces": [
+    "packages/*"
+  ],
+  "author": "",
+  "license": "ISC"
 }

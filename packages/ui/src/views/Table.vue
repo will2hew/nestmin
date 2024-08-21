@@ -58,9 +58,9 @@
           <template #header>
             <div v-tooltip.top="column.comment">
               {{ column.name }}
-              <Badge v-if="column.primary" size="small">PK</Badge>
+              <Badge v-if="column.primary" size="small">pk</Badge>
               <Badge v-if="column.relation" size="small" severity="info">
-                FK
+                fk
               </Badge>
             </div>
           </template>
@@ -79,7 +79,7 @@
                 v-if="slotProps.data[column.name] === null"
                 severity="secondary"
               >
-                NULL
+                null
               </Badge>
               <template v-else>
                 {{ slotProps.data[column.name] }}
@@ -94,7 +94,7 @@
               <Badge
                 v-tooltip.top="'This column has been marked as select: false'"
                 severity="secondary"
-                >Hidden</Badge
+                >hidden</Badge
               >
             </template>
             <template v-else>
@@ -104,6 +104,7 @@
 
           <template #editor="{ data, field }">
             <InputText v-if="column.type === 'text'" v-model="data[field]" />
+            <span v-else>{{ data[field] }}</span>
           </template>
         </Column>
 
@@ -139,8 +140,8 @@ import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import { onMounted, ref, toRaw, watch } from "vue";
 import { RouterLink } from "vue-router";
-import { FilterDto } from "../../../lib/dto/tables-get-data.dto";
-import { TablesGetOneDto } from "../../../lib/dto/tables-get-one.dto";
+import { FilterDto } from "../../../api/lib/dto/tables-get-data.dto";
+import { TablesGetOneDto } from "../../../api/lib/dto/tables-get-one.dto";
 import AddRow from "../components/AddRow.vue";
 
 const showAddRowDialog = ref(false);

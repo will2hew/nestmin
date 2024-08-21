@@ -1,24 +1,21 @@
 import { DynamicModule, Module } from "@nestjs/common";
 import { ServeStaticModule } from "@nestjs/serve-static";
-import { join } from "path";
+import { join, resolve } from "path";
 import { NestminModuleOptions } from "./interfaces/nestmin-module-options.interface";
 import { NESTMIN_GUARD, NESTMIN_MODULE_OPTIONS } from "./nestmin.constants";
 import { NestminController } from "./nestmin.controller";
 import { NestminService } from "./nestmin.service";
 import { ProxyGuard } from "./proxy.guard";
-
 @Module({})
 export class NestminModule {
   static register(options: NestminModuleOptions): DynamicModule {
+    const path = resolve(join(__dirname, "..", "ui"));
+
     return {
       module: NestminModule,
       imports: [
         ServeStaticModule.forRoot({
-          rootPath: join(__dirname, "ui"),
-          serveRoot: `/${options.prefix}/ui`,
-          serveStaticOptions: {
-            index: false,
-          },
+          rootPath: path,
         }),
       ],
       providers: [
@@ -34,6 +31,7 @@ export class NestminModule {
         NestminService,
       ],
       controllers: [NestminController],
+      exports: [ProxyGuard],
     };
   }
 }

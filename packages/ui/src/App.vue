@@ -4,7 +4,7 @@ import Menu from "primevue/menu";
 import { MenuItem } from "primevue/menuitem";
 import { onMounted, ref } from "vue";
 import { RouterView, useRouter } from "vue-router";
-import { TablesGetManyDto } from "../../lib/dto/tables-get-many.dto";
+import { TablesGetManyDto } from "../../api/lib/dto/tables-get-many.dto";
 
 const router = useRouter();
 const items = ref<MenuItem[]>([
@@ -33,7 +33,7 @@ onMounted(async () => {
 <template>
   <div class="flex p-2 gap-2 w-full">
     <div class="card text-sm shrink-0">
-      <Menu :model="items" />
+      <Menu :model="items"></Menu>
     </div>
     <div class="flex-grow overflow-x-auto">
       <RouterView />
