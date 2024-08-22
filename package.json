@@ -1,6 +1,6 @@
 {
   "name": "@will2hew/nestmin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Nestmin is a UI built on top of TypeORM and NestJS to help you view and manage your database. It creates a generic interface for all of your tables to create, delete, edit and view data.",
   "main": "dist/api/index.js",
   "types": "dist/api/index.d.ts",
