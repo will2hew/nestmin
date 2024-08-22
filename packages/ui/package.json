@@ -1,5 +1,6 @@
 {
   "name": "@will2hew/nestmin-ui",
+  "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
@@ -24,5 +25,6 @@
     "vite": "^5.4.1",
     "vite-plugin-vue-devtools": "^7.3.8",
     "vue-tsc": "^2.0.29"
-  }
+  },
+  "license": "MIT"
 }

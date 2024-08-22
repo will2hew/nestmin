@@ -1,17 +1,23 @@
 {
   "name": "@will2hew/nestmin",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Nestmin is a UI built on top of TypeORM and NestJS to help you view and manage your database. It creates a generic interface for all of your tables to create, delete, edit and view data.",
   "main": "dist/api/index.js",
+  "types": "dist/api/index.d.ts",
   "scripts": {
     "dev": "npm run dev --workspaces",
     "build": "npm run build --workspaces && mkdir -p dist/{api,ui} && cp -r packages/api/dist/* dist/api && cp -r packages/ui/dist/* dist/ui",
     "build:api": "npm run build --workspace @will2hew/nestmin-api",
-    "build:ui": "npm run build --workspace @will2hew/nestmin-ui"
+    "build:ui": "npm run build --workspace @will2hew/nestmin-ui",
+    "prepublishOnly": "npm run build"
   },
   "workspaces": [
     "packages/*"
   ],
+  "files": [
+    "dist",
+    "package.json"
+  ],
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }
