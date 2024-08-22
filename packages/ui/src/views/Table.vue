@@ -166,7 +166,7 @@ const props = defineProps({
 
 async function handleRowSave(event: DataTableRowEditSaveEvent) {
   try {
-    await axios.patch(`/api/admin/tables/${props.name}`, event.newData);
+    await axios.patch(`tables/${props.name}`, event.newData);
     await loadData();
   } catch (error) {
     console.error(error);
@@ -175,7 +175,7 @@ async function handleRowSave(event: DataTableRowEditSaveEvent) {
 
 async function handleAddRow(formData: any) {
   try {
-    await axios.put(`/api/admin/tables/${props.name}`, formData);
+    await axios.put(`tables/${props.name}`, formData);
     await loadData();
     showAddRowDialog.value = false;
   } catch (error) {
@@ -186,7 +186,7 @@ async function handleAddRow(formData: any) {
 async function loadData(): Promise<void> {
   try {
     const tableDetailsResponse = await axios.get<TablesGetOneDto>(
-      `/api/admin/tables/${props.name}`,
+      `tables/${props.name}`,
     );
 
     tableDetails.value = tableDetailsResponse.data;
@@ -211,7 +211,7 @@ async function loadData(): Promise<void> {
     }
 
     const tableDataResponse = await axios.get<any[]>(
-      `/api/admin/tables/${props.name}/data`,
+      `tables/${props.name}/data`,
       {
         params: {
           page: Math.floor(pageStart.value / pageSize.value) + 1,

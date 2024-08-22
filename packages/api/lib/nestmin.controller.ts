@@ -38,6 +38,11 @@ export class NestminController {
     );
   }
 
+  @Get()
+  ui() {
+    // Handled by the static middleware
+  }
+
   @Get("tables")
   getTables(): TablesGetManyDto {
     return this.nestminService.getTables();

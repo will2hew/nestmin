@@ -16,7 +16,7 @@ const items = ref<MenuItem[]>([
 
 onMounted(async () => {
   try {
-    const response = await axios.get<TablesGetManyDto>(`/api/admin/tables`);
+    const response = await axios.get<TablesGetManyDto>(`tables`);
 
     items.value[0].items = response.data.tables.map((table) => ({
       label: table.name,
